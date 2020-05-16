@@ -2,14 +2,13 @@ close all;clear all;
 hg =[37,68.6323]; % wysokoœæ anten nad poziomem gruntu
 h1g = 37.68; h2g = 68.6323;
 y1 = 113;y2=98; % wysokosc gruntu
-% xo=[15.9];
-xo = 1.5;
-yo = [142];
+xo=[15.9];
+yo = [135];
 d = 20.7;
 f= 25.571;
 %% Okreslenie czy obszar moze byc zrodlem zanikow interferencyjnych
 % obliczam wysokosci anten wzgledem powierzchni odbijajacej
-tgv = 1*1e-3; % nachylenie obszru odbijajecego
+tgv = 5/1.5*1e-3; % nachylenie lasu
 h1 = h1g+y1-yo+xo*tgv*1e3;
 h2 = h2g+y2-yo-(d-xo)*tgv*1e3;
 k = [0.52,1e9]; % zakres zmian wspol refrakcji
@@ -31,7 +30,7 @@ else
    display('Male pstwo zanikow') 
 end
 %% Parametry elektryczne suchego gruntu dla 25 GHz
-sigma=7e2;
+sigma=7;
 er = 7;
 eps = er-1i*18*sigma/f;
 %eps = 81-1i*30; % przenikalnosc elektryczna wody
@@ -45,8 +44,7 @@ L1 = d*sqrt(1+(4*f*h1*h2*1e-2)/(3*d))./(1+f*(h1+h2)^2*1e-2/(3*d)); % dlugosc [km
 W1 = sqrt(3*d*1e-4/f);
 %% Obszar w calosci odbija zatem
 Rs = 1;
-%% Teren nierowny
-dew = 2; % dewiacja wysokosci
+%% Las jest nierowny i ma dewiacje wysokoœci oko³o 1.5m zatem
 g = 40*pi*f*1.5*sin(phi)/3;
 Rr = sqrt((1+(g.^2/2))./(1+2.35*(g.^2/2)+2*pi*(g.^2/2).^2));
 % Rr=1;
@@ -56,6 +54,5 @@ gamma_sh_v = gammav.*D*Rs.*Rr;
 %% K¹ty miedzy sk³adowa bezposrednia i odbita
 a1o = 180/pi*(h1./d1-(h1-h2)./d-d2./(12.74.*k))*1e-3;
 a2o = 180/pi*(h2./d2-(h2-h1)./d - d1./(12.74.*k))*1e-3;
-a1 = 1;a2=1;
-Lo = 12*((a1o./a1).^2+(a2o./a2).^2)-20.*log10(gamma_sh_v); % ocena oslabienia skladowej odbitej wzgledem  skl bezposredniej
+Lo = 12*((a1o./a1).^2+(a2o./a2).^2)-20.*log10(); % ocena oslabienia skladowej odbitej wzgledem  skl bezposredniej
 
