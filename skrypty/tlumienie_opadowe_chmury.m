@@ -5,10 +5,11 @@ T = 273.15;
 d=20.7; % distance [km]
 %% T³umienie opadowe
 kv=0.1533;av=0.9491; % stale z tabeli
-R001=interpolacja_biliniowa([52.125,52.2,52.25],[21.125,21.14,21.25],[26.589,26.549;26.294,26.288]); %[mm/h]
+%R001=interpolacja_biliniowa([52.125,52.2,52.25],[21.125,21.14,21.25],[26.589,26.549;26.294,26.288]); %[mm/h]
+R001=24.294;
 gamma = kv*R001^av; % t³umiennosc w [dB/km]
 r = 1/(0.477*d^0.633*R001^(0.073*av)*f^0.123-10.579*(1-exp(-0.024*d)));
-A001 = gamma*d(end)*r; % t³umienie w [dB]
+A001 = gamma*d(end)*r % t³umienie w [dB]
 phi = (147.6585-147)/(d*1e3);
 %% T³umienie wywo³ane chmurami
 th = 300/T;e0 = 77.66+103.3*(th-1);
