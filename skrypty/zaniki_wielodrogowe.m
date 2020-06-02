@@ -5,18 +5,22 @@ clear all;
 % A= 20;
 h1=37;h2 = 68.6323;
 hl = min(h1,h2);
-K = 1.7708e-05;
-eps =(h2-h1)/20.7;
+d=20.7; % km
+
+dN1 = -1.56590e2;
+sa = 38.3;
+K = 10^(-4.4-0.0027*dN1) * (10+sa)^(-0.46)
+%K = 1.7708e-05;
+eps_p =abs(h2-h1)/d;
 f = [24.563 25.571]; %
 psi = 52;
-d=20.7;
-% pw = (K*d^3.4).*((1+eps).^(-1.03)).*f.*10.^(-0.00076*h1-A/10);
-dG=10.5 - 5.6*log10(1.1-abs(cosd(2*psi))^0.7)-2.7*log10(d)+1.7*log10(1+eps)
+% pw = (K*d^3.4).*((1+eps).^(-1.03)).*f.^(0.8).*10.^(-0.00076*h1-A/10);
+dG=10.5 - 5.6*log10(1.1-abs(cosd(2*psi))^0.7)-2.7*log10(d)+1.7*log10(1+eps_p)
 % p = (10^(-dG/10))*pw
 p=0.01;
 pw = p*10^(dG/10)
-% A=-10*(log10(pw/((K*d^3.4).*((1+eps).^(-1.03)).*f))+0.00076*h1)
-A = -10*( log10(pw ./ (K*(d^3.4).* ((1+eps).^-1.03).*f)) + 0.00076*hl)
+% A=-10*(log10(pw/((K*d^3.4).*((1+eps).^(-1.03)).*f.^(0.8)))+0.00076*h1)
+A = -10*( log10(pw ./ (K*(d^3.4).* ((1+eps_p).^-1.03).*f.^(0.8))) + 0.00076*hl)
 
 
 %% Obliczanie p-stwa depolaryzacji dla czystego powietrza
@@ -26,14 +30,15 @@ if XPDg <= 35
 else
     XPD0 = 40;
 end
-P0 = pw/100;
-eta = 1 - exp(-0.2*(P0)^0.75);
+p0 = K*d^(3.4) .* ((1+abs(eps_p)).^(-1.03))* f.^(0.8) * 10.^(-0.00076*hl);  % [%]
+P0 = p0/100;
+eta = 1 - exp(-0.2*(P0).^0.75);
 k_XP = 0.7; % dla jednej anteny nadawczej
-Q = -10*log10(k_XP*eta/P0);
+Q = -10.*log10(k_XP.*eta./P0)
 C = XPD0 + Q;
 C0_I = 19.5387 + 10;
-M_XPD = C - C0_I
-P_XP = P0 * 10^(-M_XPD/10);
+M_XPD = C - C0_I;
+P_XP = P0 .* 10.^(-M_XPD/10)
 P_XP_proc = P_XP * 100
 
 %% Prawdopodobienstwo depolaryzacji powodowane opadami
